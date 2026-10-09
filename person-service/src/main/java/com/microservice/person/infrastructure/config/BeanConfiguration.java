@@ -2,6 +2,7 @@ package com.microservice.person.infrastructure.config;
 
 import com.microservice.person.application.service.PersonService;
 import com.microservice.person.domain.ports.in.CreatePersonUseCase;
+import com.microservice.person.domain.ports.in.PersonUseCase;
 import com.microservice.person.domain.ports.out.PersonRepositoryPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
 
     @Bean
-    public CreatePersonUseCase createPersonUseCase(PersonRepositoryPort personRepositoryPort) {
+    public PersonUseCase personUseCase(PersonRepositoryPort personRepositoryPort) {
         return new PersonService(personRepositoryPort);
     }
 }

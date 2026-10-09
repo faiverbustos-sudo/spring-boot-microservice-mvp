@@ -7,7 +7,9 @@ import com.microservice.person.infrastructure.adapters.output.persistence.mapper
 import com.microservice.person.infrastructure.adapters.output.persistence.repository.SpringDataPersonRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class PersonPersistenceAdapter implements PersonRepositoryPort {
@@ -21,13 +23,31 @@ public class PersonPersistenceAdapter implements PersonRepositoryPort {
     @Override
     public Person save(Person person) {
         PersonEntity entity = PersonEntityMapper.toEntity(person);
-        PersonEntity saved = repository.save(entity);
-        return PersonEntityMapper.toDomain(saved);
+        PersonEntity savedEntity = repository.save(entity);
+        return PersonEntityMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public Optional<Person> findById(Long id) {
+        return repository.findById(id)
+                .map(PersonEntityMapper::toDomain);
     }
 
     @Override
     public Optional<Person> findByEmail(String email) {
         return repository.findByEmail(email)
                 .map(PersonEntityMapper::toDomain);
+    }
+
+    @Override
+    public List<Person> findAll() {
+        return repository.findAll().stream()
+                .map(PersonEntityMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        repository.deleteById(id);
     }
 }
